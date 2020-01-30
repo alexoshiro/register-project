@@ -1,12 +1,10 @@
-package project.alexoshiro.registerapi.model;
+package project.alexoshiro.registerapi.dto;
 
 import java.time.LocalDate;
 
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.NotBlank;
 
 import org.bson.types.ObjectId;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -22,10 +20,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import project.alexoshiro.registerapi.dto.PersonDTO;
 import project.alexoshiro.registerapi.enums.GenderEnum;
+import project.alexoshiro.registerapi.model.Person;
 
-@Document(collection = "person")
 @Builder
 @Getter
 @Setter
@@ -33,12 +30,11 @@ import project.alexoshiro.registerapi.enums.GenderEnum;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode
-public class Person {
+public class PersonDTO {
 
-	@Id
-	private ObjectId id;
+	private String id;
 
-	@NotNull
+	@NotBlank(message = "Nome não pode ser vazio.")
 	private String name;
 	private GenderEnum gender;
 	private String email;
@@ -47,18 +43,17 @@ public class Person {
 	@JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
 	@JsonDeserialize(using = LocalDateDeserializer.class)
 	@JsonSerialize(using = LocalDateSerializer.class)
-	@NotNull
 	private LocalDate birthDate;
 
 	private String nationality;
 	private String citizenship;
 
-	@NotNull
+	@NotBlank(message = "CPF não pode ser vazio.")
 	private String cpf;
 
-	public PersonDTO convertToDTO() {
-		return PersonDTO.builder()
-				.id(this.id.toString())
+	public Person convertToModel() {
+		return Person.builder()
+				.id(this.id != null ? new ObjectId(this.id) : null)
 				.name(this.name)
 				.gender(this.gender)
 				.email(this.email)

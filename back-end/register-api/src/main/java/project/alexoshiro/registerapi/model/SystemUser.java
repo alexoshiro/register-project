@@ -1,8 +1,8 @@
 package project.alexoshiro.registerapi.model;
 
-import java.util.UUID;
-
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
@@ -15,9 +15,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class SystemUser {
+	
 	@Id
-	private UUID id;
+	private ObjectId id;
+	
+	@Indexed(unique = true)
 	private String username;
 	private String password;
 	private String email;
