@@ -18,6 +18,13 @@ import project.alexoshiro.registerapi.service.impl.LoginService;
 @EnableWebSecurity
 public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 
+	private static final String[] SWAGGER_WHITELIST = {
+			"/swagger-resources/**",
+			"/swagger-ui.html",
+			"/v2/api-docs",
+			"/webjars/**"
+	};
+
 	@Autowired
 	private LoginService loginService;
 
@@ -27,7 +34,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth.userDetailsService(loginService);
-		
+
 		super.configure(auth);
 	}
 
@@ -35,6 +42,8 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	protected void configure(HttpSecurity http) throws Exception {
 		http.csrf().disable().authorizeRequests()
 				.antMatchers("/login").permitAll()
+				.antMatchers("/source").permitAll()
+				.antMatchers(SWAGGER_WHITELIST).permitAll()
 				.anyRequest().authenticated()
 				.and().sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(authorizationFilter, UsernamePasswordAuthenticationFilter.class);
