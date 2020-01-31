@@ -41,7 +41,7 @@ Compilando e criando local docker image do front-end
 Navegue até - e execute o seguinte comando:
 
 ```
-npm build
+npm run build
 ```
 
 Após executar com sucesso os dois comandos, navegue até /register-project.
@@ -87,6 +87,8 @@ npm start
 ```
 
 ### Ambiente de produção
+
+Perfil de build back-end: **prod**
 
 Antes de implantar a aplicação em um ambiente de produção, é necessário configurar algumas variáveis de ambiente, são elas:
 
