@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -56,10 +57,17 @@ public class PersonController {
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> registerPerson(@RequestHeader("Authorization") String authorization,
 			@RequestBody @Valid PersonDTO person) {
-		List<String> errors = ValidationUtils.validatePersonRequest(person);
+		List<String> errors = ValidationUtils.validatePersonRequest(person, false);
 		if (errors.isEmpty()) {
 			Person model = person.convertToModel();
-			personService.savePerson(model);
+			try {
+				personService.savePerson(model);
+			} catch (DuplicateKeyException e) {
+				errors.add("Já existe uma pessoa com o cpf cadastrado.");
+				ErrorNormalizerDTO dto = new ErrorNormalizerDTO(String.valueOf(HttpStatus.UNPROCESSABLE_ENTITY.value()),
+						errors);
+				return ResponseEntity.unprocessableEntity().body(dto);
+			}
 			return ResponseEntity.ok(person);
 		}
 		return ResponseEntity.badRequest()
@@ -70,7 +78,7 @@ public class PersonController {
 	@PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<?> updatePerson(@RequestHeader("Authorization") String authorization, @PathVariable String id,
 			@RequestBody PersonDTO person) {
-		List<String> errors = ValidationUtils.validatePersonRequest(person);
+		List<String> errors = ValidationUtils.validatePersonRequest(person, true);
 
 		if (errors.isEmpty()) {
 			Person model = person.convertToModel();

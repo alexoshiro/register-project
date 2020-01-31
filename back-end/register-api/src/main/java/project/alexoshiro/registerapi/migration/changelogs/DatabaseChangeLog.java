@@ -1,6 +1,9 @@
 package project.alexoshiro.registerapi.migration.changelogs;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -41,6 +44,7 @@ public class DatabaseChangeLog {
 		Random generator = new Random();
 
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 		for (int i = 0; i < 1000; i++) {
 			people.add(new Document("name", faker.name().fullName())
 					.append("gender", genders[generator.nextInt(genders.length)].toString())
@@ -48,7 +52,9 @@ public class DatabaseChangeLog {
 					.append("birth_date", sdf.format(faker.date().birthday()))
 					.append("nationality", faker.nation().nationality())
 					.append("citizenship", "brasileiro")
-					.append("cpf", CpfGenerator.generateCPF()));
+					.append("cpf", CpfGenerator.generateCPF())
+					.append("creation_date", LocalDateTime.now(ZoneOffset.UTC).format(formatter))
+					.append("updated_date", LocalDateTime.now(ZoneOffset.UTC).format(formatter)));
 		}
 		peopleCollection.insertMany(people);
 	}
