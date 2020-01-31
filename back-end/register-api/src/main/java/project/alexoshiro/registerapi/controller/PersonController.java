@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,7 +34,7 @@ public class PersonController {
 	private IPersonService personService;
 
 	@GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getPeople() {
+	public ResponseEntity<List<PersonDTO>> getPeople(@RequestHeader("Authorization") String authorization) {
 		List<Person> people = personService.getPeople();
 		List<PersonDTO> dto = people.stream()
 				.map(Person::convertToDTO)
@@ -42,7 +43,7 @@ public class PersonController {
 	}
 
 	@GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> getPersonById(@PathVariable String id) {
+	public ResponseEntity<PersonDTO> getPersonById(@PathVariable String id) {
 		Optional<Person> result = personService.getPersonById(id);
 
 		if (result.isEmpty()) {
@@ -53,7 +54,8 @@ public class PersonController {
 	}
 
 	@PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> registerPerson(@RequestBody @Valid PersonDTO person) {
+	public ResponseEntity<?> registerPerson(@RequestHeader("Authorization") String authorization,
+			@RequestBody @Valid PersonDTO person) {
 		List<String> errors = ValidationUtils.validatePersonRequest(person);
 		if (errors.isEmpty()) {
 			Person model = person.convertToModel();
@@ -66,7 +68,8 @@ public class PersonController {
 	}
 
 	@PatchMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<?> updatePerson(@PathVariable String id, @RequestBody PersonDTO person) {
+	public ResponseEntity<?> updatePerson(@RequestHeader("Authorization") String authorization, @PathVariable String id,
+			@RequestBody PersonDTO person) {
 		List<String> errors = ValidationUtils.validatePersonRequest(person);
 
 		if (errors.isEmpty()) {
@@ -83,7 +86,8 @@ public class PersonController {
 	}
 
 	@DeleteMapping(value = "/{id}")
-	public ResponseEntity<?> deletePerson(@PathVariable String id) {
+	public ResponseEntity<?> deletePerson(@RequestHeader("Authorization") String authorization,
+			@PathVariable String id) {
 		Optional<Person> result = personService.deletePersonById(id);
 
 		if (result.isEmpty()) {
