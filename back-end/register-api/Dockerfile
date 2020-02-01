@@ -10,4 +10,4 @@ ARG JAR_FILE
 # Add the application's jar to the container
 COPY ${JAR_FILE} app.jar 
 # Run the jar file 
-ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+ENTRYPOINT ["java","-jar", "-Dspring.data.mongodb.uri=${MONGO_URI}", "-Djava.security.egd=file:/dev/./urandom","/app.jar"]
