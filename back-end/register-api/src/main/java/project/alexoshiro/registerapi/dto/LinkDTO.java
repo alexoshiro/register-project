@@ -27,13 +27,17 @@ public class LinkDTO {
 	private String next;
 
 	private String previous;
+	
+	@JsonProperty("total_items")
+	private long totalItems;
 
-	public LinkDTO(String baseUrl, int pageItemsQuantity, int totalPages, int actualPage, int pageItems) {
+	public LinkDTO(String baseUrl, int pageItemsQuantity, int totalPages, int actualPage, int pageItems, long totalItems) {
 		this.pageItems = pageItemsQuantity;
 		this.totalPages = totalPages;
 		this.pageNumber = actualPage;
 		this.next = actualPage < totalPages ? createUrl(baseUrl, actualPage + 1, pageItems) : null;
 		this.previous = actualPage > 1 ? createUrl(baseUrl, actualPage - 1, pageItems) : null;
+		this.totalItems = totalItems;
 	}
 
 	private String createUrl(String baseUrl, int page, int pageItems) {

@@ -25,6 +25,7 @@ import io.jsonwebtoken.security.SignatureException;
 import project.alexoshiro.registerapi.dto.ErrorNormalizerDTO;
 import project.alexoshiro.registerapi.security.JwtHelper;
 import project.alexoshiro.registerapi.service.impl.LoginService;
+import project.alexoshiro.registerapi.util.MessageUtils;
 
 @Component
 public class AuthorizationRequestFilter extends OncePerRequestFilter {
@@ -48,7 +49,7 @@ public class AuthorizationRequestFilter extends OncePerRequestFilter {
 				username = jwtHelper.extractClaims(jwt).getSubject();
 			} catch (SignatureException e) {
 				List<String> errors = new ArrayList<>();
-				errors.add("Token de autenticação inválido.");
+				errors.add(MessageUtils.INVALID_AUTHORIZATION_TOKEN);
 				ErrorNormalizerDTO body = new ErrorNormalizerDTO(String.valueOf(HttpStatus.UNAUTHORIZED.value()),
 						errors);
 				response.setHeader("Content-Type", "application/json;charset=UTF-8");
@@ -68,7 +69,7 @@ public class AuthorizationRequestFilter extends OncePerRequestFilter {
 					}
 				} catch (DataAccessResourceFailureException e) {
 					List<String> errors = new ArrayList<>();
-					errors.add("Ocorreu um problema ao tentar conectar a base de dados.");
+					errors.add(MessageUtils.DATABASE_CONNECTION_FAIL);
 					ErrorNormalizerDTO body = new ErrorNormalizerDTO(
 							String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()),
 							errors);

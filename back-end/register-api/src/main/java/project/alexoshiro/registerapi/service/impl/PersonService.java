@@ -30,7 +30,7 @@ public class PersonService implements IPersonService {
 		if (databasePage < 0) {
 			databasePage = 0;
 		}
-		
+		long total = personRepository.count();
 		PageRequest pageRequest = PageRequest.of(databasePage, pageItems);
 		Page<Person> people = personRepository.findAll(pageRequest);
 
@@ -38,7 +38,7 @@ public class PersonService implements IPersonService {
 		people.getContent().forEach(person -> resultList.add(person.convertToDTO()));
 
 		return new PeoplePaginationResultDTO(resultList,
-				new LinkDTO(baseUrl, resultList.size(), people.getTotalPages(), page, pageItems));
+				new LinkDTO(baseUrl, resultList.size(), people.getTotalPages(), page, pageItems, total));
 	}
 
 	public Optional<Person> savePerson(Person person) throws DuplicateKeyException {

@@ -22,6 +22,7 @@ import lombok.Setter;
 import lombok.ToString;
 import project.alexoshiro.registerapi.enums.GenderEnum;
 import project.alexoshiro.registerapi.model.Person;
+import project.alexoshiro.registerapi.util.MessageUtils;
 
 @Builder
 @Getter
@@ -34,7 +35,7 @@ public class PersonDTO {
 
 	private String id;
 
-	@NotBlank(message = "Nome não pode ser vazio.")
+	@NotBlank(message = MessageUtils.NAME_CANNOT_BE_BLANK)
 	private String name;
 	private GenderEnum gender;
 	private String email;
@@ -48,7 +49,7 @@ public class PersonDTO {
 	private String nationality;
 	private String citizenship;
 
-	@NotBlank(message = "CPF não pode ser vazio.")
+	@NotBlank(message = MessageUtils.CPF_CANNOT_BE_BLANK)
 	private String cpf;
 
 	public Person convertToModel() {

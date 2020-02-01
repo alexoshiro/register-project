@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import project.alexoshiro.registerapi.dto.ErrorNormalizerDTO;
 import project.alexoshiro.registerapi.security.JwtHelper;
 import project.alexoshiro.registerapi.service.impl.LoginService;
+import project.alexoshiro.registerapi.util.MessageUtils;
 
 @RestController
 @RequestMapping
@@ -44,7 +45,7 @@ public class LoginController {
 			try {
 				authManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
 			} catch (BadCredentialsException e) {
-				errors.add("Username or Passowrd invalid");
+				errors.add(MessageUtils.INVALID_USER_OR_PASSWORD);
 				ErrorNormalizerDTO dto = new ErrorNormalizerDTO(String.valueOf(HttpStatus.UNAUTHORIZED.value()),
 						errors);
 				return new ResponseEntity<>(dto, HttpStatus.UNAUTHORIZED);
@@ -53,7 +54,7 @@ public class LoginController {
 			String jwt = jwtHelper.createToken(user, new HashMap<>());
 			return ResponseEntity.ok().header("x-token", jwt).build();
 		}
-		errors.add("Invalid credentials information");
+		errors.add(MessageUtils.INVALID_CREDENTIALS);
 		ErrorNormalizerDTO dto = new ErrorNormalizerDTO(String.valueOf(HttpStatus.BAD_REQUEST.value()),
 				errors);
 		return ResponseEntity.badRequest().body(dto);
@@ -62,7 +63,7 @@ public class LoginController {
 	private String decodeBasicRequest(String basic) {
 		if (basic != null && !basic.isBlank() && basic.startsWith("Basic ") && Base64.isBase64(basic.substring(6))) {
 			String decodedBasic = new String(Base64.decodeBase64(basic.substring(6)));
-			if (decodedBasic.contains(":") && decodedBasic.split(":")[0].length() > 0
+			if (decodedBasic.contains(":") && decodedBasic.split(":").length == 2 && decodedBasic.split(":")[0].length() > 0
 					&& decodedBasic.split(":")[1].length() > 0) {
 				return decodedBasic;
 			}

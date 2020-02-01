@@ -68,6 +68,7 @@ public class SecurityConfigurer extends WebSecurityConfigurerAdapter {
 	@Bean
 	CorsConfigurationSource corsConfigurationSource() {
 		CorsConfiguration configuration = new CorsConfiguration();
+		configuration.setAllowedHeaders(Arrays.asList(CorsConfiguration.ALL));
 		configuration.setAllowedOrigins(Arrays.asList(CorsConfiguration.ALL));
 		configuration.setAllowedMethods(Arrays.asList("DELETE", "GET", "POST", "PATCH", "PUT"));
 		configuration.setExposedHeaders(Arrays.asList("x-token"));

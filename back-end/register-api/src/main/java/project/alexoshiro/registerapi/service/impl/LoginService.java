@@ -25,7 +25,7 @@ public class LoginService implements UserDetailsService {
 		if (user != null && !user.isEmpty()) {
 			return new User(user.get(0).getUsername(), user.get(0).getPassword(), new ArrayList<>());
 		} else {
-			throw new UsernameNotFoundException("User " + username + " not found");
+			throw new UsernameNotFoundException("Usuário " + username + " não encontrado.");
 		}
 	}
 

@@ -27,6 +27,7 @@ import project.alexoshiro.registerapi.dto.PeoplePaginationResultDTO;
 import project.alexoshiro.registerapi.dto.PersonDTO;
 import project.alexoshiro.registerapi.model.Person;
 import project.alexoshiro.registerapi.service.IPersonService;
+import project.alexoshiro.registerapi.util.MessageUtils;
 import project.alexoshiro.registerapi.util.ValidationUtils;
 
 @RestController
@@ -75,7 +76,7 @@ public class PersonController {
 				}
 				return ResponseEntity.ok(savedModel.get().convertToDTO());
 			} catch (DuplicateKeyException e) {
-				errors.add("Já existe uma pessoa com o cpf cadastrado.");
+				errors.add(MessageUtils.CPF_ALREADY_REGISTERED);
 				ErrorNormalizerDTO dto = new ErrorNormalizerDTO(String.valueOf(HttpStatus.UNPROCESSABLE_ENTITY.value()),
 						errors);
 				return ResponseEntity.unprocessableEntity().body(dto);

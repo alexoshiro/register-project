@@ -20,6 +20,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import com.mongodb.MongoTimeoutException;
 
 import project.alexoshiro.registerapi.dto.ErrorNormalizerDTO;
+import project.alexoshiro.registerapi.util.MessageUtils;
 
 @ControllerAdvice
 public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
@@ -47,7 +48,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 		List<String> errors = new ArrayList<>();
 		if (ex.getLocalizedMessage().contains("java.time.LocalDate")
 				&& ex.getLocalizedMessage().contains("birth_date")) {
-			errors.add("Data de nascimento é inválido.");
+			errors.add(MessageUtils.INVALID_BIRTH_DATE);
 		} else {
 			errors.add(ex.getLocalizedMessage());
 		}
@@ -64,7 +65,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
 		List<String> errors = new ArrayList<>();
 
-		errors.add("Não foi possivel conectar ao banco de dados.");
+		errors.add(MessageUtils.DATABASE_CONNECTION_FAIL);
 
 		ErrorNormalizerDTO body = new ErrorNormalizerDTO(String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()),
 				errors);
