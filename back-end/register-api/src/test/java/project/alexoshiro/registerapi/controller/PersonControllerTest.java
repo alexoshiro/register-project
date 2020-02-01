@@ -55,7 +55,7 @@ public class PersonControllerTest extends BaseController {
 	public void getPeopleShouldReturnList() throws Exception {
 		mockMvc.perform(get("/people").header("Authorization", token))
 				.andExpect(status().isOk())
-				.andExpect(jsonPath("$", hasSize(1001)));
+				.andExpect(jsonPath("$.payload", hasSize(50)));
 	}
 
 	@Test

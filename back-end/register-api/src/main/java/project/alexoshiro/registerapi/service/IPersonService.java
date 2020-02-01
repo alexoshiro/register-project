@@ -1,15 +1,15 @@
 package project.alexoshiro.registerapi.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.dao.DuplicateKeyException;
 
+import project.alexoshiro.registerapi.dto.PeoplePaginationResultDTO;
 import project.alexoshiro.registerapi.model.Person;
 
 public interface IPersonService {
 
-	List<Person> getPeople();
+	PeoplePaginationResultDTO getPeople(String baseUrl, Integer page, Integer pageItems);
 
 	Optional<Person> savePerson(Person person) throws DuplicateKeyException;
 
