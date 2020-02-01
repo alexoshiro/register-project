@@ -1,0 +1,97 @@
+* {
+    margin: 0;
+    padding: 0;
+    outline: 0;
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    min-height: 100%
+}
+
+body {
+    background-color: #1A1A1D;
+    -webkit-font-smoothing: antialiased !important;
+}
+
+body,
+button,
+input {
+    font-size: 14px;
+}
+
+.container {
+    margin: 80px auto 0;
+    max-width: 450px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.logo {
+    color: #fff;
+    font-size: 25px;
+}
+.content {
+    width: 100%;
+    background: #fff;
+    margin-top: 50px;
+    border-radius: 4px;
+    padding: 30px;
+}
+
+.login-header {
+    font-size: 22px;
+    line-height: 30px;
+    margin-bottom: 30px;
+}
+
+.content form {
+    display: flex;
+    flex-direction: column;
+}
+
+.content form label{
+    font-size: 14px;
+    color: #444;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.content form input{
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    height: 45px;
+    padding: 0 15px;
+    font-size: 16px;
+}
+
+.content button.btn {
+    border: 1px solid #f05a5b;
+    border-radius: 20px;
+    width: 100%;
+    height: 42px;
+    padding: 0 20px;
+    font-size: 16px;
+    font-weight: bold;
+    background: #fff;
+    color: #f05a5b;
+}
+
+.content button.btn:hover {
+    color: #e14f50;
+}
+
+.required-field {
+    color: red
+}
+
+.error-message{
+    font-size: 14px;
+    color: red;
+    margin-bottom: 10px;
+}

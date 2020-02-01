@@ -1,0 +1,31 @@
+.dashboard-container {
+  margin: 80px auto 0;
+  width: 100%;
+  max-width: 1500px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+}
+
+.register-button-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.register-button-container > a {
+  margin: 25px !important;
+}
+
+.table-container {
+  height: 500px;
+}
+
+.loading{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+}
