@@ -11,7 +11,7 @@ public interface IPersonService {
 
 	List<Person> getPeople();
 
-	void savePerson(Person person) throws DuplicateKeyException;
+	Optional<Person> savePerson(Person person) throws DuplicateKeyException;
 
 	Optional<Person> updatePerson(String id, Person person);
 

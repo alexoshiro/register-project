@@ -61,14 +61,18 @@ public class PersonController {
 		if (errors.isEmpty()) {
 			Person model = person.convertToModel();
 			try {
-				personService.savePerson(model);
+				Optional<Person> savedModel = personService.savePerson(model);
+
+				if (savedModel.isEmpty()) {
+					return ResponseEntity.unprocessableEntity().build();
+				}
+				return ResponseEntity.ok(savedModel.get().convertToDTO());
 			} catch (DuplicateKeyException e) {
 				errors.add("Já existe uma pessoa com o cpf cadastrado.");
 				ErrorNormalizerDTO dto = new ErrorNormalizerDTO(String.valueOf(HttpStatus.UNPROCESSABLE_ENTITY.value()),
 						errors);
 				return ResponseEntity.unprocessableEntity().body(dto);
 			}
-			return ResponseEntity.ok(person);
 		}
 		return ResponseEntity.badRequest()
 				.body(new ErrorNormalizerDTO(String.valueOf(HttpStatus.BAD_REQUEST.value()), errors));

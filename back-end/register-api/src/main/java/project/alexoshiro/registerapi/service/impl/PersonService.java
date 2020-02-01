@@ -23,23 +23,25 @@ public class PersonService implements IPersonService {
 		return personRepository.findAll();
 	}
 
-	public void savePerson(Person person) throws DuplicateKeyException {
+	public Optional<Person> savePerson(Person person) throws DuplicateKeyException {
 		LocalDateTime date = LocalDateTime.now();
 		person.setCreationDate(date);
 		person.setUpdatedDate(date);
-		personRepository.save(person);
+		Person savedPerson = personRepository.save(person);
+		
+		return Optional.of(savedPerson);
 	}
 
 	public Optional<Person> updatePerson(String id, Person person) {
 		Optional<Person> savedPerson = getPersonById(id);
 		if (savedPerson.isPresent()) {
 			Person toSave = savedPerson.get();
-			
+
 			person.setCreationDate(null);
 			CopyUtils.copyNonNullProperties(person, toSave);
-			
+
 			toSave.setUpdatedDate(LocalDateTime.now());
-			
+
 			Person updatedPerson = personRepository.save(toSave);
 			return Optional.of(updatedPerson);
 		}

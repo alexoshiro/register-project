@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessResourceFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -48,20 +49,33 @@ public class AuthorizationRequestFilter extends OncePerRequestFilter {
 			} catch (SignatureException e) {
 				List<String> errors = new ArrayList<>();
 				errors.add("Token de autenticação inválido.");
-				ErrorNormalizerDTO body = new ErrorNormalizerDTO(String.valueOf(HttpStatus.UNAUTHORIZED.value()), errors);
+				ErrorNormalizerDTO body = new ErrorNormalizerDTO(String.valueOf(HttpStatus.UNAUTHORIZED.value()),
+						errors);
 				response.setHeader("Content-Type", "application/json;charset=UTF-8");
 				response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 				response.getWriter().write(new ObjectMapper().writeValueAsString(body));
 				return;
 			}
 			if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-				UserDetails userDetails = loginService.loadUserByUsername(username);
+				try {
+					UserDetails userDetails = loginService.loadUserByUsername(username);
 
-				if (jwtHelper.validateToken(jwt, userDetails)) {
-					UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails,
-							null, userDetails.getAuthorities());
-					token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-					SecurityContextHolder.getContext().setAuthentication(token);
+					if (jwtHelper.validateToken(jwt, userDetails)) {
+						UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(userDetails,
+								null, userDetails.getAuthorities());
+						token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+						SecurityContextHolder.getContext().setAuthentication(token);
+					}
+				} catch (DataAccessResourceFailureException e) {
+					List<String> errors = new ArrayList<>();
+					errors.add("Ocorreu um problema ao tentar conectar a base de dados.");
+					ErrorNormalizerDTO body = new ErrorNormalizerDTO(
+							String.valueOf(HttpStatus.INTERNAL_SERVER_ERROR.value()),
+							errors);
+					response.setHeader("Content-Type", "application/json;charset=UTF-8");
+					response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+					response.getWriter().write(new ObjectMapper().writeValueAsString(body));
+					return;
 				}
 			}
 		}
