@@ -1,16 +1,11 @@
 version: "3"
 services:
-  mongodb:
-    image: mongo:4.2.3
-    container_name: "mongodb"
-    ports:
-    - 27017:27017
   registerapi:
     image: alexoshiro/register-api:latest
     ports:
     - 8080:8080
     environment:
-    - MONGO_URI=mongodb://mongodb:27017
+    - MONGO_URI=CHANGE_TO_YOUR_MONGO_URI_CONNECTION_STRING
     links:
     - mongodb
   registerui:

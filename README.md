@@ -38,10 +38,14 @@ mvn clean install
 
 Compilando e criando local docker image do front-end
 
-Navegue até - e execute o seguinte comando:
+Navegue até register-project\front-end\register-ui 
+
+Antes de fazer o build é necessário configurar o .env do projeto com a varável de ambiente REACT_APP_API_URL para indicar a url de consulta com a API.
+
+Execute o seguinte comando:
 
 ```
-npm run build
+docker build -t alexoshiro/register-ui .
 ```
 
 Após executar com sucesso os dois comandos, navegue até /register-project.
@@ -78,12 +82,12 @@ docker-compose -f docker-compose-dev.yml up -d
 
 Esse docker compose executa apenas o container do mongodb.
 
-Para executar a aplicação back-end, utilize o perfil **dev**.
+Para executar a aplicação back-end, utilize o perfil **dev** e sua ide de preferência.
 
 Para executar a aplicação front-end, utilize o comando:
 
 ```
-npm start
+yarn start
 ```
 
 ### Ambiente de produção
@@ -93,10 +97,8 @@ Perfil de build back-end: **prod**
 Antes de implantar a aplicação em um ambiente de produção, é necessário configurar algumas variáveis de ambiente, são elas:
 
 ```
-database_host = variável para indicar o host do banco de dados mongo
-database_port = porta na qual o mongo está alocado
-database_username = usuário de autenticação do mongo
-database_password = senha do usuário de autenticação
+MONGO_URI = variável para indicar a URI do banco de dados mongo
+REACT_APP_API_URL= variável para indicar a URL na qual a API está exposta
 ```
 
 ### Possíveis erros e soluções
