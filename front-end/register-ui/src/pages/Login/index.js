@@ -62,6 +62,7 @@ export default function Login({ history }) {
             id="username"
             name="username"
             placeholder="nome de usuário"
+            className="custom-input"
             value={values.username}
             onChange={handleChange}
             onBlur={handleBlur}
@@ -72,6 +73,7 @@ export default function Login({ history }) {
             id="password"
             name="password"
             placeholder="senha"
+            className="custom-input"
             value={values.password}
             onChange={handleChange}
             onBlur={handleBlur}

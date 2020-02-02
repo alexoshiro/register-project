@@ -29,3 +29,7 @@
   align-items: center;
   width: 100%;
 }
+
+.table-icon-spacing {
+  margin-left: 15px; 
+}

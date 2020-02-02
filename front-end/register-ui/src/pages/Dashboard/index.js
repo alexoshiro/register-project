@@ -12,15 +12,20 @@ import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from '@material-ui/icons/Edit';
+
+
 
 const columns = [
   { id: 'name', label: 'Nome', minWidth: 170 },
   { id: 'gender', label: 'Sexo', minWidth: 100, format: value => convertGenderToReadable(value) },
   { id: 'email', label: 'E-mail', minWidth: 170 },
   { id: 'birth_date', label: 'Data de nascimento', minWidth: 170, format: value => value.split("-").reverse().join("/") },
-  { id: 'nationality', label: 'Naturalidade', minWidth: 170 },
-  { id: 'citizenship', label: 'Nacionalidade', minWidth: 170 },
-  { id: 'cpf', label: 'Cpf', minWidth: 170 }
+  { id: 'nationality', label: 'Naturalidade', minWidth: 150 },
+  { id: 'citizenship', label: 'Nacionalidade', minWidth: 150 },
+  { id: 'cpf', label: 'Cpf', minWidth: 170 },
+  { id: 'actions', label: 'Ações', minWidth: 100, align: "center" }
 ];
 
 function convertGenderToReadable(value) {
@@ -40,9 +45,13 @@ export default function Dashboard({ history }) {
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [rows, setRows] = useState([]);
   const [totalItems, setTotalItems] = useState(0);
-  useEffect(() => {
+  const [rowsRemoved, setRowsRemoved] = useState(0);
 
+  useEffect(() => {
     const token = localStorage.getItem('user_authorization');
+    const header = {
+      'Authorization': `Bearer ${token}`
+    }
     if (!token) {
       redirectToLogin();
     }
@@ -50,9 +59,6 @@ export default function Dashboard({ history }) {
       history.push("/");
     }
 
-    const header = {
-      'Authorization': `Bearer ${token}`
-    }
     setLoading(true);
     api.get("/people", {
       params: {
@@ -71,13 +77,13 @@ export default function Dashboard({ history }) {
       })
       .catch(({ response }) => {
         setLoading(false);
-        if (response.status === 401) {
+        if (response.status === 401 || response.status === 403) {
           localStorage.removeItem('user_authorization');
           redirectToLogin();
         }
       });
 
-  }, [history, page, rowsPerPage])
+  }, [history, page, rowsPerPage, rowsRemoved])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -88,8 +94,33 @@ export default function Dashboard({ history }) {
     setPage(0);
   };
 
+  function handleDeleteRow(id) {
+    const token = localStorage.getItem('user_authorization');
+    const header = {
+      'Authorization': `Bearer ${token}`
+    }
+    setLoading(true);
+    api.delete(`/people/${id}`, {
+      headers: header
+    })
+      .then(response => {
+        if (response && response.status === 204) {
+          setPage(0);
+          setRowsRemoved(rowsRemoved + 1);
+        } else {
+          setLoading(false);
+        }
+      })
+      .catch(({ response }) => {
+        setLoading(false);
+        alert(response.data);
+      });
+
+  }
+
   return (
     <div className="dashboard-container">
+      {console.log("Estou renderizando")}
       <div className="register-button-container">
         <Link to="/register">
           <Button variant="contained" color="primary">Cadastrar pessoa</Button>
@@ -122,12 +153,22 @@ export default function Dashboard({ history }) {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.id}>
                   {columns.map(column => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.format && value ? column.format(value) : value}
-                      </TableCell>
-                    );
+                    if (column.id === "actions") {
+                      return (
+                        <TableCell key={column.id} align={column.align}>
+                          <EditIcon onClick={() => alert("oi")} />
+                          <DeleteIcon className="table-icon-spacing" onClick={() => handleDeleteRow(row.id)} />
+                        </TableCell>
+                      )
+                    } else {
+                      const value = row[column.id];
+                      return (
+                        <TableCell key={column.id} align={column.align}>
+                          {column.format && value ? column.format(value) : value}
+                        </TableCell>
+                      );
+                    }
+
                   })}
                 </TableRow>
               );
