@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { useFormik } from "formik";
+import React from 'react';
+
 import * as Yup from 'yup';
-import api from '../../services/api';
-import './register.css';
+import { useFormik } from "formik";
 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Select from '@material-ui/core/Select';
@@ -11,76 +9,39 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { KeyboardDatePicker } from '@material-ui/pickers';
 import MaskedInput from 'react-text-mask'
 
+import './PersonForm.css';
+
 const validationSchema = Yup.object({
   name: Yup.string().required("Nome da pessoa é obrigatório."),
   email: Yup.string().email("Formato do e-mail é inválido."),
-  cpf: Yup.string().required("Cpf é obrigatório.").matches(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, 'Formato do cpf é inválido')
+  cpf: Yup.string().required("Cpf é obrigatório.").matches(/^\d{3}\.\d{3}\.\d{3}-\d{2}$/, 'Formato do cpf é inválido'),
+  birthDate: Yup.string().required("Data de nascimento é obrigatória.")
 });
 
-export default function Register({ history }) {
-  const [loading, setLoading] = useState(false);
-  const [serverErrors, setServerErrors] = useState([]);
-  const [birthDate, setBirthDate] = useState(new Date());
-
-  const { handleSubmit, handleChange, handleBlur, values, errors, touched } = useFormik({
+export default function PersonForm({ person = {}, submit, serverErrors, loading, cancelButtonAction, headerText = "Cadastrar", submitButtonText = "Cadastrar" }) {
+  const { handleSubmit, handleChange, handleBlur, values, errors, touched, setFieldValue } = useFormik({
     initialValues: {
-      name: '',
-      gender: '',
-      email: '',
-      nationality: '',
-      citizenship: '',
-      cpf: ''
+      name: person.name || '',
+      gender: person.gender || '',
+      email: person.email || '',
+      nationality: person.nationality || '',
+      citizenship: person.citizenship || '',
+      cpf: person.cpf || '',
+      birthDate: person.birth_date || ''
     },
+    enableReinitialize: true,
     validationSchema,
-    onSubmit: () => handleRegisterSubmit()
+    onSubmit: (values) => submit(values)
   });
-
-  function handleRegisterSubmit() {
-    const token = localStorage.getItem('user_authorization');
-    if (!token) {
-      redirectToLogin();
-    }
-    function redirectToLogin() {
-      history.push("/");
-    }
-
-    const header = {
-      'Authorization': `Bearer ${token}`
-    }
-    const body = {
-      name: values.name,
-      gender: values.gender ? values.gender : null,
-      email: values.email ? values.email : null,
-      nationality: values.nationality ? values.nationality : null,
-      citizenship: values.citizenship ? values.citizenship : null,
-      cpf: values.cpf,
-      birth_date: birthDate ? birthDate.toLocaleString().split(" ")[0].split("/").reverse().join("-") : null
-    }
-
-    setLoading(true);
-    api.post("/people", body, {
-      headers: header
-    })
-      .then(response => {
-        setLoading(false);
-        if (response && response.status === 200) {
-          history.push("/dashboard");
-        }
-      })
-      .catch(({ response }) => {
-        setLoading(false);
-        setServerErrors(response && response.data && response.data.errors || []);
-      });
-  }
-
+  console.log(values);
   const handleDateChange = date => {
-    setBirthDate(date);
+    const birthDate = date ? date.toLocaleString().split(" ")[0].split("/").reverse().join("-") : '';
+    setFieldValue("birthDate", birthDate);
   };
-
 
   return (
     <div className="container">
-      <div className="logo">Cadastrar</div>
+      <div className="logo">{headerText}</div>
       <div className="content">
         {serverErrors.map(error => (
           <p className="error-message">
@@ -120,9 +81,9 @@ export default function Register({ history }) {
             onChange={handleChange}
             onBlur={handleBlur}
           />
-          {!birthDate && (
+          {errors.birthDate && touched.birthDate && (
             <p className="error-message">
-              Data de nascimento é obrigatória.
+              {errors.birthDate}
             </p>
           )}
           <KeyboardDatePicker
@@ -130,10 +91,13 @@ export default function Register({ history }) {
             id="birthDate"
             label="Data de nascimento*"
             format="dd/MM/yyyy"
-            value={birthDate}
+            value={values.birthDate && values.birthDate !== "" ? new Date(values.birthDate.split("-")[0], Number(values.birthDate.split("-")[1]) - 1, values.birthDate.split("-")[2]) : null}
             onChange={handleDateChange}
+            onBlur={handleBlur}
             KeyboardButtonProps={{ 'aria-label': 'change date' }}
             invalidDateMessage="Formato da data inválida"
+            maxDate={new Date()}
+            maxDateMessage="A data de nascimento não pode ser maior a data atual"
           />
           <label htmlFor="nationality">Naturalidade</label>
           <input
@@ -168,10 +132,9 @@ export default function Register({ history }) {
             value={values.cpf}
             onBlur={handleBlur}
           />
-          <button className="btn" type="submit" disabled={loading}>{loading ? (<CircularProgress disableShrink color="secondary" />) : 'Cadastrar'}</button>
-
+          <button className="custom-button" type="submit" disabled={loading}>{loading ? (<CircularProgress disableShrink color="secondary" />) : submitButtonText}</button>
         </form>
-        <Link to="/dashboard"><button className="cancel-button" disabled={loading}>Cancelar</button></Link>
+        <button className="cancel-button" disabled={loading} onClick={cancelButtonAction}>Cancelar</button>
       </div>
     </div>
   )

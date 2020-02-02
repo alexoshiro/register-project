@@ -40,7 +40,7 @@ export default function Login({ history }) {
       })
       .catch(({ response }) => {
         setLoading(false);
-        setServerErrors(response && response.data && response.data.errors || []);
+        setServerErrors((response && response.data && response.data.errors) || []);
       });
   }
 
@@ -79,7 +79,7 @@ export default function Login({ history }) {
             onBlur={handleBlur}
           />
 
-          <button className="btn" type="submit" disabled={loading}>{loading ? (<CircularProgress disableShrink color="secondary" />) : 'Entrar'}</button>
+          <button className="custom-button" type="submit" disabled={loading}>{loading ? (<CircularProgress disableShrink color="secondary" />) : 'Entrar'}</button>
         </form>
       </div>
     </div>

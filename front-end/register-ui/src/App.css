@@ -70,7 +70,7 @@ input {
     font-size: 16px;
 }
 
-.content button.btn {
+.custom-button {
     border: 1px solid #f05a5b;
     border-radius: 20px;
     width: 100%;
@@ -80,9 +80,9 @@ input {
     font-weight: bold;
     background: #fff;
     color: #f05a5b;
-}
+  }
 
-.content button.btn:hover {
+.custom-button:hover {
     color: #e14f50;
 }
 
