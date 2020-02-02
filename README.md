@@ -4,15 +4,15 @@ Projeto para cadastro de pessoas.
 
 ## Demonstração
 
-<link>
+http://alexoshiro.com/
 
-Usuário de acesso: ***
+Usuário de acesso: admin
 
-Senha do usuário: ***
+Senha do usuário: 123
 
 A documentação da API(Swagger) estará disponível em:
 
-<link_api>/swagger-ui.html
+http://alexoshiro.com:8080/swagger-ui.html
 
 
 
@@ -25,6 +25,8 @@ Maven versão 3.6 ou compatíveis
 Node versão 10 ou compatíveis
 
 Docker versão 19 ou compatíveis
+
+Yarn versão 1.19 ou compatíveis
 
 ## Executar com docker-compose
 
