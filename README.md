@@ -50,7 +50,19 @@ Com isso basta navegar até /register-project e executar o comando:
 docker-compose up -d
 ```
 
-Esse comando fará com que o docker realize o pull das imagens do repositório e implantado os containers com as imagens do mongodb, register-api e register-ui.
+Esse comando fará com que o docker realize o pull das imagens do repositório e implantado os containers com as imagens mongodb, register-api e register-ui.
+
+
+
+Caso queira que a aplicação se conecte a um banco já existente, há também a opção de executar a aplicação de backend se conectando a um banco externo:
+
+Para isso configure a variável de ambiente MONGO_URI dentro de docker-compose-without-mongo.yml na pasta raiz do projeto alterando o valor para a URI de conexão com o seu banco de dados.
+
+```
+docker-compose -f docker-compose-without-mongo.yml up -d
+```
+
+Esse comando fará com que o docker realize o pull das imagens do repositório e implantado os containers com as imagens register-api e register-ui.
 
 ### 2° Opção:
 
@@ -82,7 +94,19 @@ Execute:
 docker-compose up -d
 ```
 
-Esse comando fará com que seja levantado os containers com as imagens do mongodb, register-api e register-ui.
+Esse comando fará com que seja levantado os containers com as imagens mongodb, register-api e register-ui.
+
+
+
+Caso queira que a aplicação se conecte a um banco já existente, há também a opção de executar a aplicação de backend se conectando a um banco externo:
+
+Para isso configure a variável de ambiente MONGO_URI dentro de docker-compose-without-mongo.yml na pasta raiz do projeto alterando o valor para a URI de conexão com o seu banco de dados.
+
+```
+docker-compose -f docker-compose-without-mongo.yml up -d
+```
+
+Esse comando fará com que seja levantado os containers com as imagens register-api e register-ui.
 
 -----------------------------------
 
