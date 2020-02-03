@@ -103,9 +103,21 @@ MONGO_URI = variável para indicar a URI do banco de dados mongo
 REACT_APP_API_URL= variável para indicar a URL na qual a API está exposta
 ```
 
-### Possíveis erros e soluções
+## API - Registros no banco de dados (migration)
 
-#### Erro - Could not build image
+A aplicação possui um sistema de *migration* ativo.
+
+Os scripts podem ser visualizados no pacote: project.alexoshiro.registerapi.migration.changelogs
+
+Quando a aplicação é implantada com qualquer perfil ativo, a *migration* cria um usuário padrão(usuário admin, senha 123) para acesso ao sistema(*ChangeSet id 1580358097*) na *collection user*.
+
+Quando a aplicação é implantada com os perfis de **dev** ou **test** ativos, a *migration* gera 1000 registros de mock de pessoas na *collection person*(*ChangeSet id 1580409846*).
+
+Adicionalmente quando a aplicação é implantada com o perfil de **test**, a *migration* gera 1 registro de mock de pessoa na *collection person*(*ChangeSet id 1580529304*) para a realização dos testes de integração.
+
+## Possíveis erros e soluções
+
+### Erro - Could not build image
 
 Esse erro ocorre quando o plugin dockerfile-maven-plugin não consegue conexão com o docker da máquina host.
 
