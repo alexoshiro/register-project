@@ -36,11 +36,11 @@ Existem as versões release das imagens da aplicação hospedadas no repositóri
 
 Backend: 
 
-https://hub.docker.com/repository/docker/alexoshiro/register-api
+https://hub.docker.com/r/alexoshiro/register-api
 
 FrontEnd:
 
-https://hub.docker.com/repository/docker/alexoshiro/register-ui
+https://hub.docker.com/r/alexoshiro/register-ui
 
 **Atenção**: a imagem da aplicação do frontend foi criada com a variável de ambiente configurada como  REACT_APP_API_URL=http://localhost:8080, ou seja, ela estará realizando consultas na API localmente.
 
