@@ -9,44 +9,21 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
-import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
+import project.alexoshiro.registerapi.BaseController;
 import project.alexoshiro.registerapi.service.IPersonService;
 
-@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-@SpringBootTest
-@ActiveProfiles("test")
-@AutoConfigureMockMvc
-@TestInstance(Lifecycle.PER_CLASS)
-public class PersonControllerTest {
+public class PersonControllerTest extends BaseController {
 
 	@Autowired
 	protected MockMvc mockMvc;
 
-	private String token = "";
-
 	@Autowired
 	private IPersonService personService;
-
-	@BeforeAll
-	public void init() throws Exception {
-		MvcResult result = mockMvc.perform(post("/login").header("Authorization", "Basic YWRtaW46MTIz"))
-				.andExpect(status().isOk())
-				.andReturn();
-		token = "Bearer " + result.getResponse().getHeader("x-token");
-	}
 
 	@Test
 	public void getPeopleNoAuthorizationShouldReturnForbidden() throws Exception {

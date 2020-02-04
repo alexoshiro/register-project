@@ -6,23 +6,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.annotation.DirtiesContext.ClassMode;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import project.alexoshiro.registerapi.BaseController;
 import project.alexoshiro.registerapi.security.JwtHelper;
 import project.alexoshiro.registerapi.service.impl.LoginService;
 
-@DirtiesContext(classMode = ClassMode.AFTER_CLASS)
-@SpringBootTest
-@ActiveProfiles("test")
-@AutoConfigureMockMvc
-public class LoginControllerTest {
+public class LoginControllerTest extends BaseController {
 
 	@Autowired
 	protected MockMvc mockMvc;
